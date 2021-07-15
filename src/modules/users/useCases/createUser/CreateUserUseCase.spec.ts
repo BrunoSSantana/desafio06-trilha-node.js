@@ -20,7 +20,6 @@ describe("Authenticate User", ()=> {
     });
 
     expect(user).toHaveProperty("id");
-    // expect(response).toHaveProperty("user");
   });
 
   it("should not be able to create a user with existing email", async () => {
