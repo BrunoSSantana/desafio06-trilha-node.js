@@ -58,9 +58,8 @@ describe("Get Statement of Operation", ()=> {
 
     expect(result.id).toEqual(newStatement.id);
   });
+
   it("should not be able get statement operation without id user", async () => {
-
-
     const newStatement = await inMemoryStatementsRepository.create({
       amount: statement.amount,
       description: statement.description,
@@ -68,33 +67,33 @@ describe("Get Statement of Operation", ()=> {
       user_id: "132",
     });
 
-
-    const result = await getStatementOperationUseCase.execute({
-      statement_id: newStatement.id as string,
-      user_id: "132",
-    });
-    expect(result).rejects.toBeInstanceOf(GetStatementOperationError.UserNotFound);
-
-    
+    expect(async ()=>{
+      await getStatementOperationUseCase.execute({
+        statement_id: newStatement.id as string,
+        user_id: "132",
+      });
+    }).rejects.toBeInstanceOf(GetStatementOperationError.UserNotFound);
   });
-  it("should not be able get statement operation without id statement", async() => {
-    const newUser = await inMemoryUsersRepository.create({
-      email: user.email,
-      name: user.name,
-      password: user.password,
-    });
 
-    await inMemoryStatementsRepository.create({
-      amount: 1800,
-      description: "test 02",
-      type: OperationType.DEPOSIT,
-      user_id: newUser.id as string,
-    });
+  it("should not be able get statement operation without id statement", () => {
+    expect(async ()=>{
+      const newUser = await inMemoryUsersRepository.create({
+        email: user.email,
+        name: user.name,
+        password: user.password,
+      });
 
-    const result = await getStatementOperationUseCase.execute({
-      statement_id: "",
-      user_id: newUser.id as string,
-    });
-    expect(result).rejects.toBeInstanceOf(GetStatementOperationError.StatementNotFound);
+      await inMemoryStatementsRepository.create({
+        amount: 1800,
+        description: "test 02",
+        type: OperationType.DEPOSIT,
+        user_id: newUser.id as string,
+      });
+
+      await getStatementOperationUseCase.execute({
+        statement_id: "",
+        user_id: newUser.id as string,
+      });
+    }).rejects.toBeInstanceOf(GetStatementOperationError.StatementNotFound);
   });
 });
