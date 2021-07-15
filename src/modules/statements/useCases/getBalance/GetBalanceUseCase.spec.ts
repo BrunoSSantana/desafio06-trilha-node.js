@@ -24,18 +24,17 @@ describe("Get Balance a User", ()=> {
     });
     await inMemorystatementsRepository.create({
       amount: 300,
-      description: "deposit",
+      description: "test",
       type: OperationType.DEPOSIT,
       user_id: user.id as string,
     })
     await inMemorystatementsRepository.create({
       amount: 100,
-      description: "withdraw",
+      description: "test",
       type: OperationType.WITHDRAW,
       user_id: user.id as string,
     })
     const balance = await getBalanceUseCase.execute({user_id: user.id as string});
-    console.log(balance);
     
     expect(balance).toHaveProperty("statement")
     expect(balance).toHaveProperty("balance")
@@ -44,7 +43,7 @@ describe("Get Balance a User", ()=> {
   it("should not be able to get balance a non-existent user", async () => {
     await inMemorystatementsRepository.create({
       amount: 160,
-      description: "deposit",
+      description: "test",
       type: OperationType.DEPOSIT,
       user_id: "13"
     })
